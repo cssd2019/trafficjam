@@ -5,11 +5,19 @@ from car import Car
 
 class Road:
     ''' '''
-    def __init__(self, total_timesteps):
+    def __init__(self):
         car_list = []
+
+    def run_simulation(total_timesteps):
+        ''' Step through all the time steps in simulation.
+
+        Returns:
+            history_position_array: To be used for plotting.
+        '''
         for timestep in total_timesteps:
             # Run simulation
             update_car_positions()
+        
 
     def add_car(self, starting_position, starting_velocity, **car_kwargs):
         ''' Add a car to the car list.
@@ -24,7 +32,7 @@ class Road:
     def update_car_positions(self):
         ''' Move all the cars at the given time step. '''
         for car in car_list:
-            distance_to_next_car = 0
+            distance_to_next_car = get_distance_to_next_car()
             position = car.update_position(distance_to_next_car)
             # Position can be reused to help calculate the distance to the next
             # car along
@@ -34,7 +42,7 @@ class Road:
 
         Be careful about edge cases.
         '''
-        retun 0
+        return 0
     
     def get_history_position_array(self):
         ''' Create a history-position array for all the cars on the road
