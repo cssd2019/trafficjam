@@ -1,1 +1,3 @@
 # trafficjam
+
+![](planning/planning.png)
