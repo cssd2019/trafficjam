@@ -23,7 +23,7 @@ history_position_array = road.get_history_position_array()
 # Save the history array to file
 distance_dataframe = pd.DataFrame(history_position_array)
 
-save_location = 'simpleDistanceHistory.csv'
+save_location = 'data/simpleDistanceHistory.csv'
 distance_values = distance_dataframe[0:n_timesteps]
 distance_dataframe.to_csv(save_location)
 
