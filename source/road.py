@@ -21,7 +21,7 @@ class Road:
 
         # Sort the cars by position
         getPosition = lambda x: x.position
-        self.car_list.sort(key=getPosition)
+        self.car_list.sort(key=getPosition, reverse=True)
 
         for timestep in range(total_timesteps):
             self.update_car_positions()
@@ -51,8 +51,6 @@ class Road:
                 **car_kwargs,
             )
 
-            print(self.car_list[-1].position)
-
     def add_car(self, starting_position, starting_velocity, car_class=None,
                 **car_kwargs):
         ''' Add a car to the car list.
@@ -71,6 +69,7 @@ class Road:
     def update_car_positions(self):
         ''' Move all the cars at the given time step. '''
         for num_car, car in enumerate(self.car_list):
+
             if num_car == 0:
                 first_distance = None
                 prev_position = car.update_position(
@@ -96,7 +95,7 @@ class Road:
             The distance between the car between the rears of the two cars.
         '''
         # The length of the car is handled by the Car's methods
-        distance = car.position - prev_position
+        distance = prev_position - car.position
 
         # Sanity checks
         if distance < 0:
