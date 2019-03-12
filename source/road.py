@@ -1,49 +1,110 @@
 #!/usr/bin/env python
-from car import Car
+from source.car import Car
+import numpy as np
 
 '''  '''
 
 class Road:
-    ''' '''
+    ''' Handler for the running of the code. '''
     def __init__(self):
-        car_list = []
+        self.car_list = []
 
-    def run_simulation(total_timesteps):
+    def run_simulation(self, total_timesteps):
         ''' Step through all the time steps in simulation.
+
+        At the start of the simulation we sort the cars by position to ensure
+        that the car at the start of the list is at the front of the road.
 
         Returns:
             history_position_array: To be used for plotting.
         '''
-        for timestep in total_timesteps:
-            # Run simulation
-            update_car_positions()
-        
 
-    def add_car(self, starting_position, starting_velocity, **car_kwargs):
+        # Sort the cars by position
+        getPosition = lambda x: x.position
+        self.car_list.sort(key=getPosition, reverse=True)
+
+        for timestep in range(total_timesteps):
+            self.update_car_positions()
+
+    def add_multiple_cars(self, starting_positions, starting_velocity,
+                          car_class=None, **car_kwargs):
+        ''' Add several cars to the list.
+
+        Args:
+            starting_velocity and starting_position of the car
+                starting_positions may be a list or interger (for a single car)
+            car_class: Car like object to use, default to the simple Car class
+            **car_kwargs: extra keywords to give to cars
+        '''
+        if car_class is None:
+            car_class = Car
+
+        # Treat a integer as a single length list so we can iterate
+        if type(starting_positions) is int:
+            starting_positions = [starting_positions,]
+
+        for starting_position in starting_positions:
+            self.add_car(
+                starting_position=starting_position,
+                starting_velocity=starting_velocity,
+                car_class=car_class,
+                **car_kwargs,
+            )
+
+    def add_car(self, starting_position, starting_velocity, car_class=None,
+                **car_kwargs):
         ''' Add a car to the car list.
 
         Args:
             starting_velocity and starting_position of the car
+            car_class: Car like object to use, default to the simple Car class
             **car_kwargs: extra keywords to give to cars
         '''
-        newCar = Car(starting_position, starting_velocity, **car_kwargs)
-        car_list.append(newCar)
+        if car_class is None:
+            car_class = Car
+
+        newCar = car_class(starting_position, starting_velocity, **car_kwargs)
+        self.car_list.append(newCar)
 
     def update_car_positions(self):
         ''' Move all the cars at the given time step. '''
-        for car in car_list:
-            distance_to_next_car = get_distance_to_next_car()
-            position = car.update_position(distance_to_next_car)
-            # Position can be reused to help calculate the distance to the next
-            # car along
+        for num_car, car in enumerate(self.car_list):
 
-    def get_distance_to_next_car(self, car):
+            if num_car == 0:
+                first_distance = None
+                prev_position = car.update_position(
+                    first_distance,
+                )
+            else:
+                distance_to_next_car = self.get_distance_to_next_car(
+                    car,
+                    prev_position
+                )
+                prev_position = car.update_position(
+                    distance_to_next_car,
+                )
+
+    def get_distance_to_next_car(self, car, prev_position):
         ''' Get the distance to the car in front.
 
-        Be careful about edge cases.
+        Args:
+            car: Car object of the car of interest.
+            prev_position: x value of the car in front.
+
+        Returns:
+            The distance between the car between the rears of the two cars.
         '''
-        return 0
-    
+        # The length of the car is handled by the Car's methods
+        distance = prev_position - car.position
+
+        # Sanity checks
+        if distance < 0:
+            error_string = (f'Distance {distance} to next'
+                            'car should always be positive')
+            raise ValueError(error_string)
+
+        return distance
+
     def get_history_position_array(self):
         ''' Create a history-position array for all the cars on the road
 
@@ -53,10 +114,10 @@ class Road:
                 the simulation.
 
                 Ideally a numpy array
-        
         '''
         distance_array = []
         for car in self.car_list:
-            pass
+            distance_array.append(car.return_position_array())
 
+        distance_array = np.vstack(distance_array)
         return distance_array

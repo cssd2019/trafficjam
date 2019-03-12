@@ -5,7 +5,7 @@
 class Car:
     ''' '''
     def __init__(self, starting_position, starting_velocity):
-        self.position_history = []
+        self.position_history = [starting_position]
         self.position = starting_position
         self.velocity = starting_velocity
 
@@ -59,7 +59,8 @@ class Car:
 
         ## Update the position
         self.position += self.velocity
-        return self
+        self.position_history.append(self.position)
+        return self.position
 
     def return_position_array(self):
         ''' Give history of the array for plotting.
@@ -67,6 +68,6 @@ class Car:
         Returns:
             Return an array of positions for each time point in the simulation.
         '''
-        pass
+        return self.position_history
 
 
