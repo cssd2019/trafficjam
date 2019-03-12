@@ -7,8 +7,8 @@ import seaborn as sns
 
 ''' Main script to run the traffic jam simulation. '''
 
-n_cars = 5
-n_timesteps = 30
+n_cars = 7
+n_timesteps = 100
 starting_positions = np.linspace(0, 9, n_cars)
 starting_velocity = 2
 
