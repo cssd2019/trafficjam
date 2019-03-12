@@ -7,9 +7,9 @@ import numpy as np
 class Car:
     ''' '''
     def __init__(self, starting_position, starting_velocity):
-        self.position_history = []
         self.position = starting_position
         self.velocity = starting_velocity
+        self.position_history = [self.position]
 
         # Parameters of the cars "private", set these values to something sane
         self.braking_rate = 25 # m/s^2
@@ -51,7 +51,7 @@ class Car:
 
         self.position += self.velocity
         self.position_history.append(self.position)
-        return self
+        return self.position
 
     def return_position_array(self):
         ''' Give history of the array for plotting.
