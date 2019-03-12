@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from source.car import Car
+from car import Car
 import numpy as np
 
 '''  '''
