@@ -71,18 +71,9 @@ class Road:
         for num_car, car in enumerate(self.car_list):
 
             if num_car == 0:
-                first_distance = None
-                prev_position = car.update_position(
-                    first_distance,
-                )
+                prev_position = car.update_position(1e6)
             else:
-                distance_to_next_car = self.get_distance_to_next_car(
-                    car,
-                    prev_position
-                )
-                prev_position = car.update_position(
-                    distance_to_next_car,
-                )
+                prev_position = car.update_position(prev_position)
 
     def get_distance_to_next_car(self, car, prev_position):
         ''' Get the distance to the car in front.
