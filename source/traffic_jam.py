@@ -3,9 +3,9 @@ from road import Road
 
 ''' Main script to run the traffic jam simulation. '''
 
-n_cars = 10
+n_cars = 4
 n_timesteps = 100
-starting_positions = range(0, 5)
+starting_positions = range(0, n_cars)
 starting_velocity = 1
 
 road = Road()
