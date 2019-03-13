@@ -2,17 +2,17 @@
 
 import sys
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.animation as animation
-import numpy as np
 
-def plot(data):
-    '''Given the position-history array, plot the time evolution of the car positions.
+def plot(data): #, save_file):
+    '''Given the position-history table, plot the time evolution of the car positions.
     
     Args:
-        distance_array: The value of x positions of the cars, each row
-             represents a different car, each column is a time point in the simulation.
+        data: A pandas data table of the distance (x) positions of the cars. Each row
+             represents a different car, and each column is a time point in the simulation.
 
     Returns:
         position_plot: A plot of the car positions (y-axis) with time (x-axis)
@@ -46,7 +46,7 @@ def plot(data):
         lines.append(lobj)
 
     # Subplot axes2: car symbols
-    axes2 = fig.add_subplot(313, ylim=(-0.5, 2.5), xlim=(min_x, max_x))
+    axes2 = fig.add_subplot(313, ylim=(-0.2, 2.2), xlim=(min_x, max_x))
     axes2.set_axis_off()
     # Road lines
     axes2.plot([min_x, max_x], [0, 0], lw=2, color="grey")
@@ -54,11 +54,11 @@ def plot(data):
     # Cars list
     cars = []
     for index in range(nCars):
-        cobj = axes2.add_patch(plt.Rectangle((0, 0), width=0.1, height = 1, color=colours[index]))
+        cobj = axes2.add_patch(plt.Rectangle((0, 0), width=2, height = 1, color=colours[index]))
         cars.append(cobj)
 
     # Subplot axes3: velocity/time lines
-    axes3 = fig.add_subplot(312, ylim=(0, 100), xlim=(0, nTime))
+    axes3 = fig.add_subplot(312, ylim=(0, 80), xlim=(0, nTime))
     axes3.set_xlabel("Time")
     axes3.set_ylabel("Velocity")
     # VLines list
@@ -102,9 +102,17 @@ def plot(data):
 
     # Call the animator.  blit=True means only re-draw the parts that have changed.
     anim = animation.FuncAnimation(fig, animate, init_func=init,
-                                   frames=range(nTime), interval=100, blit=False, repeat=True)
+                                   frames=range(nTime), interval=1, blit=False, repeat=True)
 
-    plt.show()
+    return anim
+    #plt.show()
+
+    # # If there is a save file name, save the animation
+    # if (len(save_file) > 0):
+    #     # Set up formatting for the movie files
+    #     Writer = animation.writers['ffmpeg']
+    #     writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
+    #     anim.save(save_file, writer=writer)
 
 
 ## Main code
@@ -115,12 +123,19 @@ if __name__ == "__main__":
     # Data file name from args
     data_file = sys.argv[1]
 
+    # # Save animation if given annoter file name
+    # save_file = ""
+    # if len(sys.argv) >= 3 :
+    #     save_file = sys.argv[2]
+
     # Read in data from given cvs file
     data = pd.read_csv(data_file, header=0, index_col=0)
 
-    # Run plot code with data table
-    plot(data)
+    # Create animation with data table values
+    anim = plot(data) #, save_file)
     
+    # Show animation plot
+    plt.show()
     
     
     
