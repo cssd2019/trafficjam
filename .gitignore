@@ -6,3 +6,4 @@ docs/build/html/*
 docs/build/doctrees/*
 .ropeproject
 *.csv
+*.mp4
