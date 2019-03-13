@@ -17,7 +17,7 @@ To run the simulation `cd` into `trafficjam` directory and then run
 
 `traffic_jam.py` produces a `.csv` containing the historical postitions of all the cars, to show an animation of all the cars run 
 
-    python ./plotting.py
+    python ./plotting.py [history_array.csv]
        
 
 ## Making documentation
