@@ -21,3 +21,14 @@ We run the simulation, changing the distance between the cars in each run, this 
 ```eval_rst
 .. autofunction:: traffic_jam.start_space_sweep
 ```
+
+This allows us to see two distinct behaviours, when the ```car_spacing``` is
+above a critical distance the cars recover from the jam with only a small decrease 
+in velocity.
+
+[[embed figure]]
+
+However, below this distance, when the first car slows it leads to a much larger
+delays in the cars behind. Some cars even stop fully, as shown below,
+
+[video](figs/starting_space_120.mp4)
