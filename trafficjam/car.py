@@ -6,19 +6,19 @@ import numpy as np
 
 class Car:
     ''' '''
-    def __init__(self, starting_position, starting_velocity):
-        self.position_history = [starting_position]
-        self.position = starting_position
-        self.velocity = starting_velocity
-
-        # Parameters of the cars "private", set these values to something sane
-        self.braking_rate = 25 # m/s^2
-        self.acceleration_rate = 10 # m/s^2
-        self.max_velocity = 60 # m/s
-        self.desired_velocity = 40 # m/s
-        self.length = 4 # meters
-        self.stop_space = 8 # meters
-        self.safe_dist = 100 # meters
+    def __init__(self, starting_position, starting_velocity, braking_rate = 25,
+                 acceleration_rate = 10, max_velocity = 60, desired_velocity = 40,
+                 length = 4, stop_space = 8, safe_dist = 100):
+        self.position_history   = [starting_position]
+        self.position           = starting_position
+        self.velocity           = starting_velocity
+        self.braking_rate       = braking_rate # m/s^2
+        self.acceleration_rate  = acceleration_rate # m/s^2
+        self.max_velocity       = max_velocity # m/s
+        self.desired_velocity   = desired_velocity # m/s
+        self.length             = length # meters
+        self.stop_space         = stop_space # meters
+        self.safe_dist          = safe_dist # meters
 
     def increase_speed(self, time_step):
         self.velocity += self.acceleration_rate * time_step
