@@ -6,12 +6,10 @@ import numpy as np
 
 ''' Main script to run the traffic jam simulation. '''
 
-n_cars = 50
+n_cars = 70
 n_timesteps = 100
-
-starting_positions = np.linspace(0, 5, n_cars)
+# starting_space = 100
 starting_velocity = 2
-
 
 def simple_run(n_timesteps):
     ''' Run the simulation for a given number of timesteps.
@@ -31,7 +29,7 @@ def simple_run(n_timesteps):
     history_position_array = road.get_history_position_array()
     return history_position_array
 
-def peturb_traffic(n_timesteps_before, n_timesteps_slowed, n_timesteps_after):
+def peturb_traffic(starting_positions, n_timesteps_before, n_timesteps_slowed, n_timesteps_after):
     '''Allow the simulation to run for a given number of steps before suddenly
     slowing one car and resuming the simulation.
 
@@ -64,12 +62,20 @@ def peturb_traffic(n_timesteps_before, n_timesteps_slowed, n_timesteps_after):
     history_position_array = road.get_history_position_array()
     return history_position_array
 
-if __name__ == '__main__':
-    history_position_array = peturb_traffic(50, 40, 160)
-    # Save the history array to file
+def save_dataframe(history_position_array,
+                   save_location='../data/simpleDistanceHistory.csv'):
+    ''' Write the position array to file as a csv. '''
     distance_dataframe = pd.DataFrame(history_position_array)
-
-    save_location = '../data/simpleDistanceHistory.csv'
-    distance_values = distance_dataframe[0:n_timesteps]
     distance_dataframe.to_csv(save_location)
+
+def start_space_sweep():
+    ''' Run the simulation for several different starting positions. '''
+    for starting_space in range(80, 240+1, 20):
+        starting_positions = np.arange(n_cars)*starting_space
+        history_position_array = peturb_traffic(starting_positions, 50, 40, 250)
+        save_name = f'../data/staring_space_{starting_space}.csv'
+        save_dataframe(history_position_array, save_name)
+
+if __name__ == '__main__':
+    start_space_sweep()
 
