@@ -23,9 +23,7 @@ class Car:
         position_history (`list`): History of all position that this car has traveled
 
     """
-    def __init__(self, starting_position, starting_velocity, braking_rate = 25,
-                 acceleration_rate = 10, max_velocity = 60, desired_velocity = 40,
-                 length = 4, stop_space = 8, safe_dist = 100):
+    def __init__(self, starting_position, starting_velocity, braking_rate = 25, acceleration_rate = 10, max_velocity = 60, desired_velocity = 40, length = 4, stop_space = 8, safe_dist = 100):
         self.position_history   = [starting_position]
         self.position           = starting_position
         self.velocity           = starting_velocity
@@ -61,10 +59,13 @@ class Car:
 
         '''
         dist = position_of_next_car - self.position - self.length - self.stop_space
-        if dist < self.safe_dist:
-            self.decrease_speed(time_step = 1) # We have not defined time step
-        if dist > self.safe_dist:
-            self.increase_speed(time_step = 1) # We have not defined time step
+        if dist < self.stop_space:
+            self.velocity = 0
+        else:
+            if dist < self.safe_dist:
+                self.decrease_speed(time_step = 1)
+            if dist > self.safe_dist:
+                self.increase_speed(time_step = 1)
 
         self.position += self.velocity
         self.position_history.append(self.position)
