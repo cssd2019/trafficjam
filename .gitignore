@@ -5,3 +5,4 @@ __pycache__
 docs/build/html/*
 docs/build/doctrees/*
 .ropeproject
+*.csv
