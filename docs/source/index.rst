@@ -12,5 +12,6 @@ This is our text
    :maxdepth: 2
 
    introduction
-   objects
+   road
+   car
 
