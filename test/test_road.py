@@ -2,8 +2,8 @@
 # import pytest
 import sys; sys.path.append('../trafficjam/')
 import numpy as np
-from car import Car
-from road import Road
+from trafficjam.car import Car
+from trafficjam.road import Road
 from numpy.testing import assert_allclose
 
 class SimpleCar(Car):

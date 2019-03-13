@@ -54,7 +54,7 @@ def plot(data): #, save_file):
     # Cars list
     cars = []
     for index in range(nCars):
-        cobj = axes2.add_patch(plt.Rectangle((0, 0), width=2, height = 1, color=colours[index]))
+        cobj = axes2.add_patch(plt.Rectangle((0, 0), width=3, height = 0.3, color=colours[index]))
         cars.append(cobj)
 
     # Subplot axes3: velocity/time lines
