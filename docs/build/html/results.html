@@ -1,0 +1,177 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Results &#8212; Traffic Jam  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Car" href="car.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="results">
+<h1>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h1>
+<p>In order to create a traffic jam we create a number of cars on the road and
+allow the simulation to advance for a given number of steps, before slowing one
+of the cars near the front of the grid for several steps and the allowing it to
+resume normal behaviour.</p>
+<p>This is implemented by</p>
+<dl class="function">
+<dt id="traffic_jam.peturb_traffic">
+<code class="descclassname">traffic_jam.</code><code class="descname">peturb_traffic</code><span class="sig-paren">(</span><em>starting_positions</em>, <em>n_timesteps_before</em>, <em>n_timesteps_slowed</em>, <em>n_timesteps_after</em>, <em>slow_car_num=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/traffic_jam.html#peturb_traffic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traffic_jam.peturb_traffic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow the simulation to run for a given number of steps before suddenly
+slowing one car and resuming the simulation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>starting_positions</strong> – List of starting_position to pass to <code class="docutils literal notranslate"><span class="pre">road.add_multiple_cars</span></code></li>
+<li><strong>n_timesteps_before</strong> – How many steps to run before the car is slowed</li>
+<li><strong>n_timesteps_slowed</strong> – How many steps the car goes at a reduced speed</li>
+<li><strong>n_timesteps_after</strong> – How many steps to record after the car has recovered</li>
+<li><strong>slow_car_num</strong> – the index of the car to slow, starting at the front of the road</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An array containing the positions of all the cars with time.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Once this has produces a <code class="docutils literal notranslate"><span class="pre">history_postion_array</span></code> this is then passed on to
+the plotting code for visualisation</p>
+<div class="section" id="changing-the-starting-distance">
+<h2>Changing the starting distance<a class="headerlink" href="#changing-the-starting-distance" title="Permalink to this headline">¶</a></h2>
+<p>We run the simulation, changing the distance between the cars in each run, this is done by using the following function</p>
+<dl class="function">
+<dt id="traffic_jam.start_space_sweep">
+<code class="descclassname">traffic_jam.</code><code class="descname">start_space_sweep</code><span class="sig-paren">(</span><em>minimum_space</em>, <em>maximum_space</em>, <em>interval</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/traffic_jam.html#start_space_sweep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traffic_jam.start_space_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the simulation for several different starting positions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>minimum_space</strong> – The smallest starting distance between cars</li>
+<li><strong>maximum_space</strong> – The largest starting distance between the cars</li>
+<li><strong>interval</strong> – The size of the steps to take between these two extremes</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>This allows us to see two distinct behaviours, when the <code class="docutils literal notranslate"><span class="pre">car_spacing</span></code> is
+above a critical distance the cars recover from the jam with only a small decrease
+in velocity.</p>
+<p>[[embed figure]]</p>
+<p>However, below this distance, when the first car slows it leads to a much larger
+delays in the cars behind. Some cars even stop fully, as shown below,</p>
+<p><a class="reference external" href="figs/starting_space_120.mp4">video</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Traffic Jam</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Project: Traffic Jam with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="road.html">Road</a></li>
+<li class="toctree-l1"><a class="reference internal" href="car.html">Car</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Results</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#changing-the-starting-distance">Changing the starting distance</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="car.html" title="previous chapter">Car</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, CSSD2019.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/results.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

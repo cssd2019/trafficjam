@@ -1,0 +1,197 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>traffic_jam &#8212; Traffic Jam  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for traffic_jam</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">from</span> <span class="nn">road</span> <span class="k">import</span> <span class="n">Road</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="sd">&#39;&#39;&#39; Main script to run the traffic jam simulation. &#39;&#39;&#39;</span>
+
+<span class="n">n_cars</span> <span class="o">=</span> <span class="mi">70</span>
+<span class="n">n_timesteps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="c1"># starting_space = 100</span>
+<span class="n">starting_velocity</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">def</span> <span class="nf">simple_run</span><span class="p">(</span><span class="n">n_timesteps</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Run the simulation for a given number of timesteps.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_timesteps: number of steps to take in the simulation</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        history_position_array: An array containing the positions of all the</span>
+<span class="sd">        cars with time.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">()</span>
+
+    <span class="c1"># Populate the road with cars</span>
+    <span class="n">road</span><span class="o">.</span><span class="n">add_multiple_cars</span><span class="p">(</span><span class="n">starting_positions</span><span class="p">,</span> <span class="n">starting_velocity</span><span class="p">)</span>
+    <span class="n">road</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">(</span><span class="n">n_timesteps</span><span class="p">)</span>
+    <span class="n">history_position_array</span> <span class="o">=</span> <span class="n">road</span><span class="o">.</span><span class="n">get_history_position_array</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">history_position_array</span>
+
+<div class="viewcode-block" id="peturb_traffic"><a class="viewcode-back" href="../results.html#traffic_jam.peturb_traffic">[docs]</a><span class="k">def</span> <span class="nf">peturb_traffic</span><span class="p">(</span><span class="n">starting_positions</span><span class="p">,</span> <span class="n">n_timesteps_before</span><span class="p">,</span> <span class="n">n_timesteps_slowed</span><span class="p">,</span>
+                   <span class="n">n_timesteps_after</span><span class="p">,</span> <span class="n">slow_car_num</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Allow the simulation to run for a given number of steps before suddenly</span>
+<span class="sd">    slowing one car and resuming the simulation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        starting_positions: List of starting_position to pass to ``road.add_multiple_cars``</span>
+<span class="sd">        n_timesteps_before: How many steps to run before the car is slowed</span>
+<span class="sd">        n_timesteps_slowed: How many steps the car goes at a reduced speed</span>
+<span class="sd">        n_timesteps_after: How many steps to record after the car has recovered</span>
+<span class="sd">        slow_car_num: the index of the car to slow, starting at the front of the road</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An array containing the positions of all the cars with time.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">road</span> <span class="o">=</span> <span class="n">Road</span><span class="p">()</span>
+
+    <span class="c1"># Add the cars and allow them to run for a while</span>
+    <span class="n">road</span><span class="o">.</span><span class="n">add_multiple_cars</span><span class="p">(</span><span class="n">starting_positions</span><span class="p">,</span> <span class="n">starting_velocity</span><span class="p">)</span>
+    <span class="n">road</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">(</span><span class="n">n_timesteps_before</span><span class="p">)</span>
+
+    <span class="c1"># Slow a car in the middle of pack</span>
+    <span class="n">slowed_car</span> <span class="o">=</span> <span class="n">road</span><span class="o">.</span><span class="n">car_list</span><span class="p">[</span><span class="n">slow_car_num</span><span class="p">]</span>
+    <span class="n">slowed_car</span><span class="o">.</span><span class="n">max_velocity</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">slowed_car</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="mi">20</span>
+
+    <span class="c1"># Resume the simulation</span>
+    <span class="n">road</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">(</span><span class="n">n_timesteps_slowed</span><span class="p">)</span>
+
+    <span class="c1"># Allow the car to recover</span>
+    <span class="n">slowed_car</span><span class="o">.</span><span class="n">max_velocity</span> <span class="o">=</span> <span class="mi">60</span>
+    <span class="n">road</span><span class="o">.</span><span class="n">run_simulation</span><span class="p">(</span><span class="n">n_timesteps_after</span><span class="p">)</span>
+
+    <span class="n">history_position_array</span> <span class="o">=</span> <span class="n">road</span><span class="o">.</span><span class="n">get_history_position_array</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">history_position_array</span></div>
+
+<span class="k">def</span> <span class="nf">save_dataframe</span><span class="p">(</span><span class="n">history_position_array</span><span class="p">,</span> <span class="n">save_location</span><span class="o">=</span><span class="s1">&#39;../data/simpleDistanceHistory.csv&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Write the position array to file as a csv. &#39;&#39;&#39;</span>
+    <span class="n">distance_dataframe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">history_position_array</span><span class="p">)</span>
+    <span class="n">distance_dataframe</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_location</span><span class="p">)</span>
+
+<div class="viewcode-block" id="start_space_sweep"><a class="viewcode-back" href="../results.html#traffic_jam.start_space_sweep">[docs]</a><span class="k">def</span> <span class="nf">start_space_sweep</span><span class="p">(</span><span class="n">minimum_space</span><span class="p">,</span> <span class="n">maximum_space</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Run the simulation for several different starting positions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">       minimum_space: The smallest starting distance between cars</span>
+<span class="sd">       maximum_space: The largest starting distance between the cars</span>
+<span class="sd">       interval: The size of the steps to take between these two extremes</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">starting_space</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">240</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+        <span class="n">starting_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_cars</span><span class="p">)</span><span class="o">*</span><span class="n">starting_space</span>
+        <span class="n">history_position_array</span> <span class="o">=</span> <span class="n">peturb_traffic</span><span class="p">(</span><span class="n">starting_positions</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+        <span class="n">save_name</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;../data/staring_space_</span><span class="si">{starting_space}</span><span class="s1">.csv&#39;</span>
+        <span class="n">save_dataframe</span><span class="p">(</span><span class="n">history_position_array</span><span class="p">,</span> <span class="n">save_name</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">start_space_sweep</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Traffic Jam</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Project: Traffic Jam with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../road.html">Road</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../car.html">Car</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, CSSD2019.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

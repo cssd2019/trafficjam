@@ -2,8 +2,6 @@
 __pycache__
 *.pyc
 .#*
-docs/build/html/*
-docs/build/doctrees/*
 .ropeproject
 *.csv
 *.mp4
