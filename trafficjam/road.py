@@ -16,7 +16,8 @@ class Road:
         that the car at the start of the list is at the front of the road.
 
         Returns:
-            history_position_array: To be used for plotting.
+            (``n_cars`` x ``n_time_steps+1``) array : History of the positions
+            of the cars.
         '''
 
         # Sort the cars by position
@@ -31,8 +32,8 @@ class Road:
         ''' Add several cars to the list.
 
         Args:
-            starting_velocity and starting_position of the car
-                starting_positions may be a list or interger (for a single car)
+            starting_positions: may be a list or float (for a single car)
+            starting_velocity: constant starting velocity for all cars
             car_class: Car like object to use, default to the simple Car class
             **car_kwargs: extra keywords to give to cars
         '''
@@ -56,7 +57,8 @@ class Road:
         ''' Add a car to the car list.
 
         Args:
-            starting_velocity and starting_position of the car
+            starting_velocity
+            starting_position 
             car_class: Car like object to use, default to the simple Car class
             **car_kwargs: extra keywords to give to cars
         '''
@@ -100,11 +102,9 @@ class Road:
         ''' Create a history-position array for all the cars on the road
 
         Returns:
-            distance_array: The value of x positions of the cars, each row
-                represents a different car, each column is a time point in
-                the simulation.
-
-                Ideally a numpy array
+            The value of x positions of the cars, each row
+            represents a different car, each column is a time point in
+            the simulation.
         '''
         distance_array = []
         for car in self.car_list:
