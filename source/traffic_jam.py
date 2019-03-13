@@ -64,12 +64,13 @@ def peturb_traffic(n_timesteps_before, n_timesteps_slowed, n_timesteps_after):
     history_position_array = road.get_history_position_array()
     return history_position_array
 
+def save_dataframe(history_position_array,
+                   save_location='../data/simpleDistanceHistory.csv'):
+  ''' Write the position array to file as a csv. '''
+    distance_dataframe = pd.DataFrame(history_position_array)
+    distance_dataframe.to_csv(save_location)
+
 if __name__ == '__main__':
     history_position_array = peturb_traffic(50, 40, 160)
-    # Save the history array to file
-    distance_dataframe = pd.DataFrame(history_position_array)
-
-    save_location = '../data/simpleDistanceHistory.csv'
-    distance_values = distance_dataframe[0:n_timesteps]
-    distance_dataframe.to_csv(save_location)
+    save_dataframe(history_position_array)
 
