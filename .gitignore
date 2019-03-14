@@ -4,6 +4,6 @@ __pycache__
 .#*
 docs/build/html/*
 docs/build/doctrees/*
+data/*.mp4
 .ropeproject
 *.csv
-*.mp4
