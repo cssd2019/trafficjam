@@ -154,7 +154,9 @@ if __name__ == "__main__":
     #     anim.save(save_file, writer=writer)
     
     # Show animation plot
-    plt.show()
+    anim.save('../media/animation.gif', writer='imagemagick', fps=60)
+    # plt.show()
+
     
 
     
