@@ -18,16 +18,16 @@ To run the simulation `cd` into `trafficjam` directory and then run
 `traffic_jam.py` produces a `.csv` containing the historical postitions of all the cars, to show an animation of all the cars run 
 
     python ./plotting.py [history_array.csv]
-       
 
 ## Making documentation
 
 The results and summary of the project is contained with the docs. To view these, run 
 
     make html
-    
+
 or 
 
     make latex
-    
-from within docs. 
+
+from within docs. The documentation is also availiable at https://extraspace.github.io/norbis-traffic/index.html.
+
