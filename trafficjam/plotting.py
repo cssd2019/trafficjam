@@ -86,20 +86,20 @@ def plot(data):
     #     vlines.append(vobj)
 
     # Initialization function: plot the background of each frame
-    def init():
-        for line in lines:
-            line.set_data([],[])    
+    # def init():
+    #     for line in lines:
+    #         line.set_data([],[])    
 
-        for car in cars:
-            car.set_x(0)
+    #     for car in cars:
+    #         car.set_x(0)
 
-        for vline in vlines:
-            vline.set_height(10)
+    #     for vline in vlines:
+    #         vline.set_height(10)
 
-        for shape in carShapes:
-            shape.get_bbox()
+    #     for shape in carShapes:
+    #         shape.get_bbox()
         
-        return lines, cars, vlines, carShapes
+    #     return lines, cars, vlines, carShapes
 
     # Animation function: This is called sequentially
     def animate(i):
@@ -128,7 +128,7 @@ def plot(data):
         return lines, cars, vlines, carShapes,
 
     # Call the animator.  blit=True means only re-draw the parts that have changed.
-    anim = animation.FuncAnimation(fig, animate, init_func=init,
+    anim = animation.FuncAnimation(fig, animate, #init_func=init,
                                    frames=range(nTime), interval=10, blit=False, repeat=True)
 
     return anim
@@ -153,22 +153,15 @@ if __name__ == "__main__":
 
     # Create animation with data table values
     anim = plot(data)
-
-    # # If there is a save file name, save the animation
-    if (len(save_file) > 0):
-        # Set up formatting for the movie files
-        Writer = animation.writers['ffmpeg']
-        writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
-        anim.save(save_file, writer=writer)
     
     # Show animation plot
-    anim.save('../media/animation.gif', writer='imagemagick', fps=60)
+    # anim.save('../media/animation.gif', writer='imagemagick', fps=60)
     # plt.show()
 
     if (len(save_file) > 0):
         # Set up formatting for the movie files
         Writer = animation.writers['ffmpeg']
-        writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
+        writer = Writer(fps=12, metadata=dict(artist='TrafficJam'), bitrate=1800)
         anim.save(save_file, writer=writer)
     else:
         # Show animation plot
