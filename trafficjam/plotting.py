@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.animation as animation
 
-def plot(data): #, save_file):
+def plot(data):
     '''Given the position-history table, plot the time evolution of the car positions.
     
     Args:
@@ -54,19 +54,23 @@ def plot(data): #, save_file):
     # Cars list
     cars = []
     for index in range(nCars):
-        cobj = axes2.add_patch(plt.Rectangle((0, 0), width=3, height = 0.3, color=colours[index]))
+        cobj = axes2.add_patch(plt.Rectangle((0, 0.2), width=max_x/200, height = 0.6, color=colours[index]))
         cars.append(cobj)
 
-    # Subplot axes3: velocity/time lines
-    axes3 = fig.add_subplot(312, ylim=(0, 80), xlim=(0, nTime))
-    axes3.set_xlabel("Time")
+    # Subplot axes3: velocity change lines
+    axes3 = fig.add_subplot(312, ylim=(-10, 60), xlim=(0, nCars))
+    axes3.set_xlabel("Car")
     axes3.set_ylabel("Velocity")
+    axes3.plot([0, nCars], [0, 0], lw=1, color="black")
     # VLines list
     vlines = []
     for index in range(nCars):
-        vobj = axes3.plot([], [], lw=2, color=colours[index])[0]
+        vobj = axes3.add_patch(plt.Rectangle((0, -10), width=1, height = 10, color=colours[index]))
         vlines.append(vobj)
-    
+    # vlines = []
+    # for index in range(nCars):
+    #     vobj = axes3.plot([], [], lw=2, color=colours[index])[0]
+    #     vlines.append(vobj)
 
     # Initialization function: plot the background of each frame
     def init():
@@ -77,7 +81,10 @@ def plot(data): #, save_file):
             car.set_x(0)
 
         for vline in vlines:
-            vline.set_data([],[])
+            vline.set_height(10)
+
+        # for vline in vlines:
+        #     vline.set_data([],[])
         
         return lines, cars, vlines,
 
@@ -93,26 +100,29 @@ def plot(data): #, save_file):
             car.set_x(x)
 
         for lnum,vline in enumerate(vlines):
-            x = range(i)
-            y = np.diff(np.append([0], data[lnum, :i]))
+            a = np.append([0], data[lnum, ])
+            h = a[i+1] - a[i]
+            if (h < 10):
+                h = 10
+            x = lnum
+            vline.set_x(x)
+            vline.set_height(h)
 
-            vline.set_data(x, y)
+        # for lnum,vline in enumerate(vlines):
+        #     x = lnum
+        #     y = np.diff(np.append([0], data[lnum, :i]))
+
+        #     vline.set_data(x, y)
             
         return lines, cars, vlines,
 
     # Call the animator.  blit=True means only re-draw the parts that have changed.
     anim = animation.FuncAnimation(fig, animate, init_func=init,
-                                   frames=range(nTime), interval=1, blit=False, repeat=True)
+                                   frames=range(nTime), interval=10, blit=False, repeat=True)
 
     return anim
-    #plt.show()
 
-    # # If there is a save file name, save the animation
-    # if (len(save_file) > 0):
-    #     # Set up formatting for the movie files
-    #     Writer = animation.writers['ffmpeg']
-    #     writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
-    #     anim.save(save_file, writer=writer)
+    
 
 
 ## Main code
@@ -122,6 +132,8 @@ if __name__ == "__main__":
 
     # Data file name from args
     data_file = sys.argv[1]
+    # Example
+    # data_file = "../data/simpleDistanceHistory.csv"
 
     # # Save animation if given annoter file name
     # save_file = ""
@@ -132,11 +144,19 @@ if __name__ == "__main__":
     data = pd.read_csv(data_file, header=0, index_col=0)
 
     # Create animation with data table values
-    anim = plot(data) #, save_file)
+    anim = plot(data)
+
+    # # If there is a save file name, save the animation
+    # if (len(save_file) > 0):
+    #     # Set up formatting for the movie files
+    #     Writer = animation.writers['ffmpeg']
+    #     writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
+    #     anim.save(save_file, writer=writer)
     
     # Show animation plot
     plt.show()
     
+
     
     
     
