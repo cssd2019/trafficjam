@@ -5,14 +5,22 @@ allow the simulation to advance for a given number of steps, before slowing one
 of the cars near the front of the grid for several steps and the allowing it to
 resume normal behaviour.
 
-This is implemented by 
-
+This is implemented by:
 ```eval_rst
 .. autofunction:: traffic_jam.peturb_traffic
 ```
 
 Once this has produces a ```history_postion_array``` this is then passed on to
 the plotting code for visualisation
+
+## Benchmark run
+In order to test the plotting, and show that all parts run together we can show
+cars simply drive after with no disturbance. This shows that a tightly grouped
+set of cars will spread out into a diffuse group
+
+```eval_rst
+.. autofunction:: traffic_jam.simple_run
+```
 
 ## Changing the starting distance
 
@@ -31,4 +39,4 @@ in velocity.
 However, below this distance, when the first car slows it leads to a much larger
 delays in the cars behind. Some cars even stop fully, as shown below,
 
-[video](figs/starting_space_120.mp4)
+
