@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from car import Car
+from trafficjam.car import Car
 import numpy as np
 
 '''  '''
