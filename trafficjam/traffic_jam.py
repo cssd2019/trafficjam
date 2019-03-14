@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from road import Road
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -51,7 +52,7 @@ def peturb_traffic(starting_positions, n_timesteps_before, n_timesteps_slowed,
     road.run_simulation(n_timesteps_before)
 
     # Slow a car in the middle of pack
-    slowed_car = road.car_list[slowed_car_num]
+    slowed_car = road.car_list[slow_car_num]
     slowed_car.max_velocity = 20
     slowed_car.velocity = 20
 
@@ -65,8 +66,7 @@ def peturb_traffic(starting_positions, n_timesteps_before, n_timesteps_slowed,
     history_position_array = road.get_history_position_array()
     return history_position_array
 
-def save_dataframe(history_position_array,
-                   save_location='../data/simpleDistanceHistory.csv'):
+def save_dataframe(history_position_array, save_location='../data/simpleDistanceHistory.csv'):
     ''' Write the position array to file as a csv. '''
     distance_dataframe = pd.DataFrame(history_position_array)
     distance_dataframe.to_csv(save_location)
@@ -86,5 +86,5 @@ def start_space_sweep(minimum_space, maximum_space, interval):
         save_dataframe(history_position_array, save_name)
 
 if __name__ == '__main__':
-    start_space_sweep()
+    start_space_sweep(30, 250, 250)
 

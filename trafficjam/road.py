@@ -61,7 +61,7 @@ class Road:
 
         Args:
             starting_velocity
-            starting_position 
+            starting_position
             car_class: Car like object to use, default to the simple Car class
             **car_kwargs: extra keywords to give to cars
         '''
