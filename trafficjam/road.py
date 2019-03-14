@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 try:
     from trafficjam.car import Car
-except ModuleNotFoundError, ImportError:
+except (ModuleNotFoundError, ImportError):
     from car import Car
 import numpy as np
 

@@ -1,4 +1,5 @@
-from trafficjam.car import Car
+import sys; sys.path.append('../trafficjam/')
+from car import Car
 import pytest
 
 @pytest.fixture
