@@ -48,6 +48,7 @@ def plot(data):
     # Subplot axes2: car symbols
     axes2 = fig.add_subplot(313, ylim=(-0.2, 2.2), xlim=(min_x, max_x))
     axes2.set_axis_off()
+
     # Road lines
     axes2.plot([min_x, max_x], [0, 0], lw=2, color="grey")
     axes2.plot([min_x, max_x], [1, 1], lw=2, color="grey")
@@ -56,6 +57,18 @@ def plot(data):
     for index in range(nCars):
         cobj = axes2.add_patch(plt.Rectangle((0, 0.2), width=max_x/200, height = 0.6, color=colours[index]))
         cars.append(cobj)
+    # Car shape
+    carShapes = []
+    obj = axes2.add_patch(plt.Rectangle((0, 1.2), width=max_x/20, height = 0.2, color="red"))
+    carShapes.append(obj)
+    obj = axes2.add_patch(plt.Rectangle((max_x/80, 1.4), width=max_x/40, height = 0.2, color="red"))
+    carShapes.append(obj)
+    obj = axes2.add_patch(plt.Rectangle((max_x/100, 1.15), width=max_x/100, height = 0.1, color="black"))
+    carShapes.append(obj)
+    obj = axes2.add_patch(plt.Rectangle((max_x/30, 1.15), width=max_x/100, height = 0.1, color="black"))
+    carShapes.append(obj)
+    obj = axes2.add_patch(plt.Rectangle((max_x/35, 1.4), width=max_x/125, height = 0.18, color="white"))
+    carShapes.append(obj)
 
     # Subplot axes3: velocity change lines
     axes3 = fig.add_subplot(312, ylim=(-10, 60), xlim=(0, nCars))
@@ -83,10 +96,10 @@ def plot(data):
         for vline in vlines:
             vline.set_height(10)
 
-        # for vline in vlines:
-        #     vline.set_data([],[])
+        for shape in carShapes:
+            shape.get_bbox()
         
-        return lines, cars, vlines,
+        return lines, cars, vlines, carShapes
 
     # Animation function: This is called sequentially
     def animate(i):
@@ -107,14 +120,12 @@ def plot(data):
             x = lnum
             vline.set_x(x)
             vline.set_height(h)
-
-        # for lnum,vline in enumerate(vlines):
-        #     x = lnum
-        #     y = np.diff(np.append([0], data[lnum, :i]))
-
-        #     vline.set_data(x, y)
+        
+        for lnum,shape in enumerate(carShapes):
+            x = shape.get_x() + max_x/nTime
+            shape.set_x(x)
             
-        return lines, cars, vlines,
+        return lines, cars, vlines, carShapes,
 
     # Call the animator.  blit=True means only re-draw the parts that have changed.
     anim = animation.FuncAnimation(fig, animate, init_func=init,
@@ -136,7 +147,7 @@ if __name__ == "__main__":
     # data_file = "../data/simpleDistanceHistory.csv"
 
     # # Save animation if given annoter file name
-    # save_file = ""
+    save_file = ""
     # if len(sys.argv) >= 3 :
     #     save_file = sys.argv[2]
 
@@ -147,11 +158,11 @@ if __name__ == "__main__":
     anim = plot(data)
 
     # # If there is a save file name, save the animation
-    # if (len(save_file) > 0):
-    #     # Set up formatting for the movie files
-    #     Writer = animation.writers['ffmpeg']
-    #     writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
-    #     anim.save(save_file, writer=writer)
+    if (len(save_file) > 0):
+        # Set up formatting for the movie files
+        Writer = animation.writers['ffmpeg']
+        writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
+        anim.save(save_file, writer=writer)
     
     # Show animation plot
     plt.show()
