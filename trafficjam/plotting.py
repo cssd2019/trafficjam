@@ -122,9 +122,6 @@ def plot(data):
 
     return anim
 
-    
-
-
 ## Main code
 if __name__ == "__main__":
     if len(sys.argv) <= 1 :
@@ -136,9 +133,9 @@ if __name__ == "__main__":
     # data_file = "../data/simpleDistanceHistory.csv"
 
     # # Save animation if given annoter file name
-    # save_file = ""
-    # if len(sys.argv) >= 3 :
-    #     save_file = sys.argv[2]
+    save_file = ""
+    if len(sys.argv) >= 3 :
+        save_file = sys.argv[2]
 
     # Read in data from given cvs file
     data = pd.read_csv(data_file, header=0, index_col=0)
@@ -157,6 +154,14 @@ if __name__ == "__main__":
     anim.save('../media/animation.gif', writer='imagemagick', fps=60)
     # plt.show()
 
+    if (len(save_file) > 0):
+        # Set up formatting for the movie files
+        Writer = animation.writers['ffmpeg']
+        writer = Writer(fps=15, metadata=dict(artist='TrafficJam'), bitrate=1800)
+        anim.save(save_file, writer=writer)
+    else:
+        # Show animation plot
+        plt.show()
     
 
     
