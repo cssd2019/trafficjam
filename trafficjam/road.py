@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from trafficjam.car import Car
+from car import Car
 import numpy as np
 
 '''  '''
@@ -49,7 +49,7 @@ class Road:
                 starting_position=starting_position,
                 starting_velocity=starting_velocity,
                 car_class=car_class,
-                **car_kwargs,
+                **car_kwargs
             )
 
     def add_car(self, starting_position, starting_velocity, car_class=None,
@@ -92,7 +92,7 @@ class Road:
 
         # Sanity checks
         if distance < 0:
-            error_string = (f'Distance {distance} to next'
+            error_string = ('Distance' + str(distance) + ' to next'
                             'car should always be positive')
             raise ValueError(error_string)
 

@@ -82,7 +82,7 @@ def start_space_sweep(minimum_space, maximum_space, interval):
     for starting_space in range(80, 240+1, 20):
         starting_positions = np.arange(n_cars)*starting_space
         history_position_array = peturb_traffic(starting_positions, 50, 40, 250)
-        save_name = f'../data/staring_space_{starting_space}.csv'
+        save_name = '../data/starting_space_ ' + str(starting_space) + '.csv'
         save_dataframe(history_position_array, save_name)
 
 if __name__ == '__main__':
